@@ -1,0 +1,30 @@
+task:
+  name: Cirrus CI
+  maven_cache:
+    folder: ~/.m2
+  matrix:
+    - windows_container:
+        image: cirrusci/windowsservercore:2019
+      install_script:
+        - cup -y chocolatey
+        - cinst -y ant
+        - cinst -y maven
+        - cinst -y openjdk11
+        - cinst -y xsltproc
+        - cinst -y xmlstarlet
+#    - container:
+#        image: ubuntu:bionic
+#        use_in_memory_disk: true
+#      install_script:
+#        - export RUNLEVEL=1
+#        - apt-get update
+#        - apt-get install -y ant maven openjdk-11-jdk xsltproc xmlstarlet
+  version_script:
+    - SET PATH=%PATH%;C:\ProgramData\chocolatey\bin;C:\ProgramData\chocolatey\lib\maven\bin;C:\Program Files\OpenJDK\openjdk-11.0.8_10\bin
+    - ant -version
+    - java --version
+    - mvn --version
+    - xsltproc --version
+    - xmlstarlet --version
+  test_script:
+    - mvn clean verify
