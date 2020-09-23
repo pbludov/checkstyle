@@ -1,0 +1,38 @@
+task:
+  clone_script: |
+    git config core.autocrlf
+    set URL=https://x-access-token:%CIRRUS_REPO_CLONE_TOKEN%@github.com/%CIRRUS_REPO_FULL_NAME%.git
+    if defined CIRRUS_PR git clone --recursive --branch=%CIRRUS_BRANCH% %URL% %CIRRUS_WORKING_DIR%
+    if not defined CIRRUS_PR git clone --recursive %URL% %CIRRUS_WORKING_DIR%
+    if not defined CIRRUS_PR git fetch origin pull/%CIRRUS_PR%/head:pull/%CIRRUS_PR%
+    git reset --hard %CIRRUS_CHANGE_IN_REPO%
+  name: Cirrus CI
+  choco_cache:
+    folder: ~/.chocolatey
+  maven_cache:
+    folder: ~/.m2
+  env:
+    PATH: >-
+      C:/ProgramData/chocolatey/bin;
+      C:/ProgramData/chocolatey/lib/maven/apache-maven-3.6.3/bin;
+      C:/Program Files/OpenJDK/openjdk-11.0.8_10/bin;
+      %PATH%
+  windows_container:
+    image: cirrusci/windowsservercore:2019
+  install_script: |
+    choco config set cacheLocation ~/.chocolatey
+    cup -y chocolatey
+    cinst -y ant
+    cinst -y maven
+    cinst -y openjdk11
+    cinst -y xsltproc
+    cinst -y xmlstarlet
+    DIR ~/AppData/Local/Temp/chocolatey
+  version_script: |
+    ant -version
+    java --version
+    mvn --version
+    xsltproc --version
+    xml --version
+  test_script: |
+    mvn clean verify
