@@ -1,0 +1,12 @@
+task:
+  name: Cirrus CI
+  maven_cache:
+    folder: ~/.m2
+  container:
+    image: maven:latest
+    use_in_memory_disk: true
+  install_script:
+    apt-get update
+    apt-get install -y ant groovy xsltproc xmlstarlet
+  test_script: |
+    .ci/validation.sh all-sevntu-checks
