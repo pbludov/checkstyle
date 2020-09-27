@@ -1,0 +1,35 @@
+task:
+  name: Cirrus CI
+  maven_cache:
+    folder: ~/.m2
+  matrix:
+    - windows_container:
+        image: cirrusci/windowsservercore:2019
+      install_script:
+        - cup -y chocolatey
+        - refreshenv
+        - cinst -y ant
+        - refreshenv
+        - cinst -y maven
+        - refreshenv
+        - cinst -y openjdk11
+        - refreshenv
+        - cinst -y xsltproc
+        - refreshenv
+        - cinst -y xmlstarlet
+        - refreshenv
+#    - container:
+#        image: ubuntu:bionic
+#        use_in_memory_disk: true
+#      install_script:
+#        - export RUNLEVEL=1
+#        - apt-get update
+#        - apt-get install -y ant maven openjdk-11-jdk xsltproc xmlstarlet
+  version_script:
+    - ant -version
+    - java --version
+    - mvn --version
+    - xsltproc --version
+    - xmlstarlet --version
+  test_script:
+    - mvn clean verify
