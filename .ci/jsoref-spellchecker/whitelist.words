@@ -504,6 +504,7 @@ func
 Fwhitespace
 Fx
 gav
+gcp
 generalform
 genericwhitespace
 Getenv
@@ -1361,6 +1362,7 @@ uncommentedmain
 Unconstructable
 unicode
 Uninstantiable
+uninterned
 uniq
 uniqueproperties
 Unitless
