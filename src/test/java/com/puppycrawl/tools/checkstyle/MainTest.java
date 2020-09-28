@@ -42,6 +42,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Handler;
@@ -262,7 +263,7 @@ public class MainTest {
     public void testUsageHelpPrint(@SysErr Capturable systemErr, @SysOut Capturable systemOut)
             throws IOException {
         Main.main("-h");
-        assertEquals(USAGE, systemOut.getCapturedData(), "Unexpected output log");
+        assertEquals(encode(USAGE), encode(systemOut.getCapturedData()), "Unexpected output log");
         assertEquals("", systemErr.getCapturedData(), "Unexpected system error log");
     }
 
@@ -285,7 +286,13 @@ public class MainTest {
         // picocli verifies required parameters before checking unknown options
         final String usage = "Missing required parameter: '<files>'" + EOL + SHORT_USAGE;
         assertEquals("", systemOut.getCapturedData(), "Unexpected output log");
-        assertEquals(usage, systemErr.getCapturedData(), "Unexpected system error log");
+        assertEquals(encode(usage), encode(systemErr.getCapturedData()),
+            "Unexpected system error log");
+    }
+
+    private static String encode(String str) {
+        return new String(Base64.getEncoder().encode(
+                str.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
     }
 
     @Test
