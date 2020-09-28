@@ -1,0 +1,46 @@
+task:
+  clone_script: >-
+    git config core.autocrlf
+    && IF DEFINED CIRRUS_PR (
+    git clone --recursive --branch=%CIRRUS_BRANCH%
+    https://x-access-token:%CIRRUS_REPO_CLONE_TOKEN%@github.com/%CIRRUS_REPO_FULL_NAME%.git
+    %CIRRUS_WORKING_DIR%
+    ) ELSE (
+    git clone --recursive
+    https://x-access-token:%CIRRUS_REPO_CLONE_TOKEN%@github.com/%CIRRUS_REPO_FULL_NAME%.git
+    %CIRRUS_WORKING_DIR%
+    && git fetch origin pull/%CIRRUS_PR%/head:pull/%CIRRUS_PR%
+    )
+    && git reset --hard %CIRRUS_CHANGE_IN_REPO%
+  name: Cirrus CI
+  choco_cache:
+    folder: /Users/ContainerAdministrator/.chocolatey
+  maven_cache:
+    folder: /Users/ContainerAdministrator/.m2
+  env:
+    NO_COLOR: "1" # disable ANSI output for picocli (may affect tests)
+    MAVEN_VERSION: "3.6.3"
+    OPENJDK_VERSION: "11.0.8_10"
+    PATH: "%PATH%;\
+      C:/ProgramData/chocolatey/lib/maven/apache-maven-%MAVEN_VERSION%/bin;\
+      C:/Program Files/OpenJDK/openjdk-%OPENJDK_VERSION%/bin;\
+      C:/ProgramData/chocolatey/bin"
+  windows_container:
+    image: cirrusci/windowsservercore:2019
+  install_script: |
+    choco config set cacheLocation %USERPROFILE%/.chocolatey
+    cup -y chocolatey
+    cinst -y ant
+    cinst -y maven --version %MAVEN_VERSION%
+    cinst -y openjdk11 --version %OPENJDK_VERSION:_=.%
+    cinst -y xsltproc
+    cinst -y xmlstarlet
+    SET
+  version_script: |
+    ant -version
+    java --version
+    mvn --version
+    xsltproc --version
+    xml --version
+  test_script: |
+    mvn -e verify -Dcheckstyle.ant.skip=true -Dcheckstyle.skip=true
