@@ -30,6 +30,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import com.puppycrawl.tools.checkstyle.internal.utils.TestUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -669,7 +670,7 @@ public class CheckstyleAntTaskTest extends AbstractPathTestSupport {
     }
 
     @Test
-    public void testSetClasspath() {
+    public void testSetClasspath() throws Exception {
         final CheckstyleAntTask antTask = new CheckstyleAntTask();
         final Project project = new Project();
         final String path1 = "firstPath";
@@ -677,7 +678,7 @@ public class CheckstyleAntTaskTest extends AbstractPathTestSupport {
         antTask.setClasspath(new Path(project, path1));
         antTask.setClasspath(new Path(project, path2));
 
-        final Path classpath = Whitebox.getInternalState(antTask, "classpath");
+        final Path classpath = TestUtil.getInternalState(antTask, "classpath");
         final String classpathString = classpath.toString();
         assertWithMessage("Classpath should not be null")
                 .that(classpath)
@@ -691,28 +692,28 @@ public class CheckstyleAntTaskTest extends AbstractPathTestSupport {
     }
 
     @Test
-    public void testSetClasspathRef() {
+    public void testSetClasspathRef() throws Exception{
         final CheckstyleAntTask antTask = new CheckstyleAntTask();
         antTask.setClasspathRef(new Reference(new Project(), "id"));
 
         assertWithMessage("Classpath should not be null")
-                .that((Object) Whitebox.getInternalState(antTask, "classpath"))
+                .that((Object) TestUtil.getInternalState(antTask, "classpath"))
                 .isNotNull();
     }
 
     /** This test is created to satisfy pitest, it is hard to emulate Reference by Id. */
     @Test
-    public void testSetClasspathRef1() {
+    public void testSetClasspathRef1() throws Exception {
         final CheckstyleAntTask antTask = new CheckstyleAntTask();
         final Project project = new Project();
         antTask.setClasspath(new Path(project, "firstPath"));
         antTask.setClasspathRef(new Reference(project, "idXX"));
 
         assertWithMessage("Classpath should not be null")
-                .that((Object) Whitebox.getInternalState(antTask, "classpath"))
+                .that((Object) TestUtil.getInternalState(antTask, "classpath"))
                 .isNotNull();
 
-        final Path classpath = Whitebox.getInternalState(antTask, "classpath");
+        final Path classpath = TestUtil.getInternalState(antTask, "classpath");
         try {
             classpath.list();
             assertWithMessage("Exception is expected")

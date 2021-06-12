@@ -64,12 +64,12 @@ public class SuppressWarningsHolderTest extends AbstractModuleTestSupport {
     }
 
     @AfterEach
-    public void cleanUp() {
+    public void cleanUp() throws Exception {
         // clear cache that may have been set by tests
 
         new SuppressWarningsHolder().beginTree(null);
 
-        final Map<String, String> map = Whitebox.getInternalState(SuppressWarningsHolder.class,
+        final Map<String, String> map = TestUtil.getInternalState(SuppressWarningsHolder.class,
                 "CHECK_ALIAS_MAP");
         map.clear();
     }
@@ -426,7 +426,7 @@ public class SuppressWarningsHolderTest extends AbstractModuleTestSupport {
         final Object entryInstance = entryConstr.newInstance(checkName, firstLine,
                 firstColumn, lastLine, lastColumn);
 
-        final ThreadLocal<List<Object>> entries = Whitebox
+        final ThreadLocal<List<Object>> entries = TestUtil
                 .getInternalState(SuppressWarningsHolder.class, "ENTRIES");
         entries.get().add(entryInstance);
     }

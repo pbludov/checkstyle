@@ -37,6 +37,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.puppycrawl.tools.checkstyle.internal.utils.TestUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.mockito.internal.util.Checks;
@@ -186,9 +187,9 @@ public class TreeWalkerTest extends AbstractModuleTestSupport {
         treeWalker.setTabWidth(1);
         treeWalker.configure(config);
 
-        final int tabWidth = Whitebox.getInternalState(treeWalker, "tabWidth");
+        final int tabWidth = TestUtil.getInternalState(treeWalker, "tabWidth");
         assertEquals(1, tabWidth, "Invalid setter result");
-        final Object configuration = Whitebox.getInternalState(treeWalker, "configuration");
+        final Object configuration = TestUtil.getInternalState(treeWalker, "configuration");
         assertEquals(config, configuration, "Invalid configuration");
     }
 
@@ -242,7 +243,7 @@ public class TreeWalkerTest extends AbstractModuleTestSupport {
         final File file = new File(getPath("InputTreeWalkerNotJava.xml"));
         final FileText fileText = new FileText(file, StandardCharsets.ISO_8859_1.name());
         treeWalker.processFiltered(file, fileText);
-        final Collection<Checks> checks = Whitebox.getInternalState(treeWalker, "ordinaryChecks");
+        final Collection<Checks> checks = TestUtil.getInternalState(treeWalker, "ordinaryChecks");
         assertTrue(checks.isEmpty(), "No checks -> No parsing");
     }
 
@@ -328,7 +329,7 @@ public class TreeWalkerTest extends AbstractModuleTestSupport {
         final FileText fileText = new FileText(file, new ArrayList<>());
 
         treeWalker.processFiltered(file, fileText);
-        final Collection<Checks> checks = Whitebox.getInternalState(treeWalker, "ordinaryChecks");
+        final Collection<Checks> checks = TestUtil.getInternalState(treeWalker, "ordinaryChecks");
         assertTrue(checks.isEmpty(), "No checks -> No parsing");
     }
 
@@ -374,8 +375,8 @@ public class TreeWalkerTest extends AbstractModuleTestSupport {
 
         treeWalker.setupChild(config);
 
-        final Set<TreeWalkerFilter> filters = Whitebox.getInternalState(treeWalker, "filters");
-        final int tabWidth = Whitebox.getInternalState(filters.iterator().next(), "tabWidth");
+        final Set<TreeWalkerFilter> filters = TestUtil.getInternalState(treeWalker, "filters");
+        final int tabWidth = TestUtil.getInternalState(filters.iterator().next(), "tabWidth");
 
         assertEquals(99, tabWidth, "expected tab width");
     }
@@ -422,13 +423,13 @@ public class TreeWalkerTest extends AbstractModuleTestSupport {
     }
 
     @Test
-    public void testFinishLocalSetupFullyInitialized() {
+    public void testFinishLocalSetupFullyInitialized() throws Exception {
         final TreeWalker treeWalker = new TreeWalker();
         treeWalker.setSeverity("error");
         treeWalker.setTabWidth(100);
         treeWalker.finishLocalSetup();
 
-        final Context context = Whitebox.getInternalState(treeWalker, "childContext");
+        final Context context = TestUtil.getInternalState(treeWalker, "childContext");
         assertEquals("error", context.get("severity"), "Severity differs from expected");
         assertEquals(String.valueOf(100), context.get("tabWidth"),
                 "Tab width differs from expected");

@@ -29,6 +29,7 @@ import java.io.File;
 import java.net.URI;
 import java.util.Set;
 
+import com.puppycrawl.tools.checkstyle.internal.utils.TestUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.powermock.reflect.Whitebox;
@@ -196,7 +197,7 @@ public class HeaderCheckTest extends AbstractModuleTestSupport {
         check.setHeaderFile(new URI("test://bad"));
 
         try {
-            Whitebox.invokeMethod(check, "loadHeaderFile");
+            TestUtil.invokeMethod(check, "loadHeaderFile");
             fail("Exception expected");
         }
         catch (CheckstyleException ex) {
@@ -253,7 +254,7 @@ public class HeaderCheckTest extends AbstractModuleTestSupport {
         final HeaderCheck check = new HeaderCheck();
         check.setHeader("Header");
         try {
-            Whitebox.invokeMethod(check, "loadHeaderFile");
+            TestUtil.invokeMethod(check, "loadHeaderFile");
             fail("ConversionException is expected");
         }
         catch (IllegalArgumentException ex) {

@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.puppycrawl.tools.checkstyle.internal.utils.TestUtil;
 import org.junit.jupiter.api.Test;
 import org.powermock.reflect.Whitebox;
 
@@ -246,12 +247,12 @@ public class FileContentsTest {
     }
 
     @Test
-    public void testGetJavadocBefore() {
+    public void testGetJavadocBefore() throws Exception {
         final FileContents fileContents = new FileContents(
                 new FileText(new File("filename"), Collections.singletonList("    ")));
         final Map<Integer, TextBlock> javadoc = new HashMap<>();
         javadoc.put(0, new Comment(new String[] {"// "}, 2, 1, 2));
-        Whitebox.setInternalState(fileContents, "javadocComments", javadoc);
+        TestUtil.setInternalState(fileContents, "javadocComments", javadoc);
         final TextBlock javadocBefore = fileContents.getJavadocBefore(2);
 
         assertEquals(
@@ -276,13 +277,13 @@ public class FileContentsTest {
     public void testHasIntersectionEarlyOut() throws Exception {
         final FileContents fileContents = new FileContents(
                 new FileText(new File("filename"), Collections.emptyList()));
-        final Map<Integer, List<TextBlock>> clangComments = Whitebox.getInternalState(fileContents,
+        final Map<Integer, List<TextBlock>> clangComments = TestUtil.getInternalState(fileContents,
                 "clangComments");
         final TextBlock textBlock = new Comment(new String[] {""}, 1, 1, 1);
         clangComments.put(1, Collections.singletonList(textBlock));
         clangComments.put(2, Collections.emptyList());
 
-        assertTrue((Boolean) Whitebox.invokeMethod(fileContents,
+        assertTrue((Boolean) TestUtil.invokeMethod(fileContents,
                 "hasIntersectionWithBlockComment", 1, 1, 1, 1),
             "Invalid results");
     }

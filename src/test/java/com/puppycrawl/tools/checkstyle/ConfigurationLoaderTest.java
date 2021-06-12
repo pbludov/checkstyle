@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import com.puppycrawl.tools.checkstyle.internal.utils.TestUtil;
 import org.junit.jupiter.api.Test;
 import org.powermock.reflect.Whitebox;
 import org.xml.sax.InputSource;
@@ -462,7 +463,7 @@ public class ConfigurationLoaderTest extends AbstractPathTestSupport {
         final Object obj = constructor.newInstance(objParent);
 
         try {
-            Whitebox.invokeMethod(obj, "startElement", "", "", "hello", null);
+            TestUtil.invokeMethod(obj, "startElement", "", "", "hello", null);
 
             fail("Exception is expected");
         }
@@ -586,7 +587,7 @@ public class ConfigurationLoaderTest extends AbstractPathTestSupport {
         final List<String> propertyRefs = new ArrayList<>();
         final List<String> fragments = new ArrayList<>();
 
-        Whitebox.invokeMethod(ConfigurationLoader.class,
+        TestUtil.invokeMethod(ConfigurationLoader.class,
                 "parsePropertyString", "$",
                fragments, propertyRefs);
         assertEquals(1, fragments.size(), "Fragments list has unexpected amount of items");

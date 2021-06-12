@@ -30,6 +30,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
+import com.puppycrawl.tools.checkstyle.internal.utils.TestUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
@@ -71,14 +72,14 @@ public class PackageObjectFactoryPowerTest {
         ModuleReflectionUtil.getCheckstyleModules(packages, classLoader);
 
         final String internalFieldName = "thirdPartyNameToFullModuleNames";
-        final Map<String, String> nullMap = Whitebox.getInternalState(objectFactory,
+        final Map<String, String> nullMap = TestUtil.getInternalState(objectFactory,
                 internalFieldName);
         assertNull("Expected uninitialized field", nullMap);
 
         final Object instance = objectFactory.createModule(name);
         assertEquals("Expected empty string", "", instance);
 
-        final Map<String, String> emptyMap = Whitebox.getInternalState(objectFactory,
+        final Map<String, String> emptyMap = TestUtil.getInternalState(objectFactory,
                 internalFieldName);
         assertEquals("Expected empty map", Collections.emptyMap(), emptyMap);
     }

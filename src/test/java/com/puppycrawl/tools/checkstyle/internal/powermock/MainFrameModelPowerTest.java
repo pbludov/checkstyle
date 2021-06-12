@@ -27,6 +27,7 @@ import static org.junit.Assert.fail;
 import java.io.File;
 import java.io.IOException;
 
+import com.puppycrawl.tools.checkstyle.internal.utils.TestUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -85,9 +86,9 @@ public class MainFrameModelPowerTest extends AbstractModuleTestSupport {
     }
 
     @Test
-    public void testOpenFileWithUnknownParseMode() throws CheckstyleException {
+    public void testOpenFileWithUnknownParseMode() throws Exception {
         final ParseMode unknownParseMode = PowerMockito.mock(ParseMode.class);
-        Whitebox.setInternalState(unknownParseMode, "ordinal", 3);
+        TestUtil.setInternalState(unknownParseMode, "ordinal", 3);
 
         PowerMockito.when(unknownParseMode.toString()).thenReturn("Unknown parse mode");
         PowerMockito.mockStatic(ParseMode.class);

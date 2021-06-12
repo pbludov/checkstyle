@@ -32,6 +32,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.puppycrawl.tools.checkstyle.internal.utils.TestUtil;
 import org.junit.jupiter.api.Test;
 import org.powermock.reflect.Whitebox;
 
@@ -302,7 +303,7 @@ public class SuppressWithNearbyCommentFilterTest
     }
 
     @Test
-    public void testEqualsAndHashCodeOfTagClass() {
+    public void testEqualsAndHashCodeOfTagClass() throws Exception {
         final SuppressWithNearbyCommentFilter filter = new SuppressWithNearbyCommentFilter();
         final Object tag =
                 getTagsAfterExecution(filter, "filename", "//SUPPRESS CHECKSTYLE ignore").get(0);
@@ -445,7 +446,7 @@ public class SuppressWithNearbyCommentFilterTest
     }
 
     @Test
-    public void testToStringOfTagClass() {
+    public void testToStringOfTagClass() throws Exception {
         final SuppressWithNearbyCommentFilter filter = new SuppressWithNearbyCommentFilter();
         final Object tag =
                 getTagsAfterExecution(filter, "filename", "//SUPPRESS CHECKSTYLE ignore").get(0);
@@ -456,7 +457,7 @@ public class SuppressWithNearbyCommentFilterTest
     }
 
     @Test
-    public void testToStringOfTagClassWithId() {
+    public void testToStringOfTagClassWithId() throws Exception {
         final SuppressWithNearbyCommentFilter filter = new SuppressWithNearbyCommentFilter();
         filter.setIdFormat(".*");
         final Object tag =
@@ -725,7 +726,7 @@ public class SuppressWithNearbyCommentFilterTest
     }
 
     @Test
-    public void testTagsAreClearedEachRun() {
+    public void testTagsAreClearedEachRun() throws Exception {
         final SuppressWithNearbyCommentFilter suppressionCommentFilter =
                 new SuppressWithNearbyCommentFilter();
         final List<?> tags1 = getTagsAfterExecution(suppressionCommentFilter,
@@ -746,14 +747,14 @@ public class SuppressWithNearbyCommentFilterTest
      * @return {@code Tag} list
      */
     private static List<?> getTagsAfterExecution(SuppressWithNearbyCommentFilter filter,
-            String filename, String... lines) {
+            String filename, String... lines) throws Exception {
         final FileContents contents = new FileContents(
                 new FileText(new File(filename), Arrays.asList(lines)));
         contents.reportSingleLineComment(1, 0);
         final TreeWalkerAuditEvent dummyEvent = new TreeWalkerAuditEvent(contents, filename,
                 new Violation(1, null, null, null, null, Object.class, null), null);
         filter.accept(dummyEvent);
-        return Whitebox.getInternalState(filter, "tags");
+        return TestUtil.getInternalState(filter, "tags");
     }
 
 }

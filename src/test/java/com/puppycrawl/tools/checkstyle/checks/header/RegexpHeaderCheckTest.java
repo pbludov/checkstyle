@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
+import com.puppycrawl.tools.checkstyle.internal.utils.TestUtil;
 import org.junit.jupiter.api.Test;
 import org.powermock.reflect.Whitebox;
 
@@ -51,13 +52,13 @@ public class RegexpHeaderCheckTest extends AbstractModuleTestSupport {
      * Test of setHeader method, of class RegexpHeaderCheck.
      */
     @Test
-    public void testSetHeaderNull() {
+    public void testSetHeaderNull() throws Exception {
         // check null passes
         final RegexpHeaderCheck instance = new RegexpHeaderCheck();
         // recreate for each test because multiple invocations fail
         final String header = null;
         instance.setHeader(header);
-        final List<Pattern> headerRegexps = Whitebox.getInternalState(instance, "headerRegexps");
+        final List<Pattern> headerRegexps = TestUtil.getInternalState(instance, "headerRegexps");
 
         assertTrue(headerRegexps.isEmpty(), "When header is null regexps should not be set");
     }
@@ -66,13 +67,13 @@ public class RegexpHeaderCheckTest extends AbstractModuleTestSupport {
      * Test of setHeader method, of class RegexpHeaderCheck.
      */
     @Test
-    public void testSetHeaderEmpty() {
+    public void testSetHeaderEmpty() throws Exception {
         // check null passes
         final RegexpHeaderCheck instance = new RegexpHeaderCheck();
         // check empty string passes
         final String header = "";
         instance.setHeader(header);
-        final List<Pattern> headerRegexps = Whitebox.getInternalState(instance, "headerRegexps");
+        final List<Pattern> headerRegexps = TestUtil.getInternalState(instance, "headerRegexps");
 
         assertTrue(headerRegexps.isEmpty(), "When header is empty regexps should not be set");
     }
@@ -81,12 +82,12 @@ public class RegexpHeaderCheckTest extends AbstractModuleTestSupport {
      * Test of setHeader method, of class RegexpHeaderCheck.
      */
     @Test
-    public void testSetHeaderSimple() {
+    public void testSetHeaderSimple() throws Exception {
         final RegexpHeaderCheck instance = new RegexpHeaderCheck();
         // check valid header passes
         final String header = "abc.*";
         instance.setHeader(header);
-        final List<Pattern> headerRegexps = Whitebox.getInternalState(instance, "headerRegexps");
+        final List<Pattern> headerRegexps = TestUtil.getInternalState(instance, "headerRegexps");
         assertEquals(1, headerRegexps.size(), "Expected one pattern");
         assertEquals(header, headerRegexps.get(0).pattern(), "Invalid header regexp");
     }

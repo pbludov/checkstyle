@@ -43,6 +43,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import com.puppycrawl.tools.checkstyle.internal.utils.TestUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.powermock.reflect.Whitebox;
@@ -305,7 +306,7 @@ public class DetailAstImplTest extends AbstractModuleTestSupport {
                 child::addChild,
             ast -> {
                 try {
-                    Whitebox.invokeMethod(child, "setParent", ast);
+                    TestUtil.invokeMethod(child, "setParent", ast);
                 }
                 // -@cs[IllegalCatch] Cannot avoid catching it.
                 catch (Exception exception) {
@@ -315,9 +316,9 @@ public class DetailAstImplTest extends AbstractModuleTestSupport {
         );
 
         for (Consumer<DetailAstImpl> method : clearBranchTokenTypesMethods) {
-            final BitSet branchTokenTypes = Whitebox.invokeMethod(parent, "getBranchTokenTypes");
+            final BitSet branchTokenTypes = TestUtil.invokeMethod(parent, "getBranchTokenTypes");
             method.accept(null);
-            final BitSet branchTokenTypes2 = Whitebox.invokeMethod(parent, "getBranchTokenTypes");
+            final BitSet branchTokenTypes2 = TestUtil.invokeMethod(parent, "getBranchTokenTypes");
             assertEquals(branchTokenTypes, branchTokenTypes2, "Branch token types are not equal");
             assertNotSame(branchTokenTypes, branchTokenTypes2,
                     "Branch token types should not be the same");
@@ -325,17 +326,17 @@ public class DetailAstImplTest extends AbstractModuleTestSupport {
     }
 
     @Test
-    public void testCacheBranchTokenTypes() {
+    public void testCacheBranchTokenTypes() throws Exception {
         final DetailAST root = new DetailAstImpl();
         final BitSet bitSet = new BitSet();
         bitSet.set(999);
 
-        Whitebox.setInternalState(root, "branchTokenTypes", bitSet);
+        TestUtil.setInternalState(root, "branchTokenTypes", bitSet);
         assertTrue(root.branchContains(999), "Branch tokens has changed");
     }
 
     @Test
-    public void testClearChildCountCache() {
+    public void testClearChildCountCache() throws ReflectiveOperationException {
         final DetailAstImpl parent = new DetailAstImpl();
         final DetailAstImpl child = new DetailAstImpl();
         parent.setFirstChild(child);
@@ -349,7 +350,7 @@ public class DetailAstImplTest extends AbstractModuleTestSupport {
         for (Consumer<DetailAstImpl> method : clearChildCountCacheMethods) {
             final int startCount = parent.getChildCount();
             method.accept(null);
-            final int intermediateCount = Whitebox.getInternalState(parent, "childCount");
+            final int intermediateCount = TestUtil.getInternalState(parent, "childCount");
             final int finishCount = parent.getChildCount();
             assertEquals(startCount, finishCount, "Child count has changed");
             assertEquals(Integer.MIN_VALUE, intermediateCount, "Invalid child count");
@@ -357,17 +358,17 @@ public class DetailAstImplTest extends AbstractModuleTestSupport {
 
         final int startCount = child.getChildCount();
         child.addChild(null);
-        final int intermediateCount = Whitebox.getInternalState(child, "childCount");
+        final int intermediateCount = TestUtil.getInternalState(child, "childCount");
         final int finishCount = child.getChildCount();
         assertEquals(startCount, finishCount, "Child count has changed");
         assertEquals(Integer.MIN_VALUE, intermediateCount, "Invalid child count");
     }
 
     @Test
-    public void testCacheGetChildCount() {
+    public void testCacheGetChildCount() throws Exception {
         final DetailAST root = new DetailAstImpl();
 
-        Whitebox.setInternalState(root, "childCount", 999);
+        TestUtil.setInternalState(root, "childCount", 999);
         assertEquals(999, root.getChildCount(), "Child count has changed");
     }
 

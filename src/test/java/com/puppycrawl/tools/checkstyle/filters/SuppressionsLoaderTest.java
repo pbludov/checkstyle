@@ -29,6 +29,7 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.puppycrawl.tools.checkstyle.internal.utils.TestUtil;
 import org.junit.jupiter.api.Test;
 import org.powermock.reflect.Whitebox;
 import org.xml.sax.InputSource;
@@ -225,7 +226,7 @@ public class SuppressionsLoaderTest extends AbstractPathTestSupport {
         final String sourceName = "InputSuppressionsLoaderNone.xml";
 
         try {
-            Whitebox.invokeMethod(SuppressionsLoader.class, "loadSuppressions",
+            TestUtil.invokeMethod(SuppressionsLoader.class, "loadSuppressions",
                     new InputSource(sourceName), sourceName);
             fail("CheckstyleException is expected");
         }
@@ -240,7 +241,7 @@ public class SuppressionsLoaderTest extends AbstractPathTestSupport {
         final String sourceName = "InputSuppressionsLoaderNone.xml";
 
         try {
-            Whitebox.invokeMethod(SuppressionsLoader.class, "loadSuppressions",
+            TestUtil.invokeMethod(SuppressionsLoader.class, "loadSuppressions",
                     new InputSource(), sourceName);
             fail("CheckstyleException is expected");
         }
@@ -301,7 +302,7 @@ public class SuppressionsLoaderTest extends AbstractPathTestSupport {
         final SuppressFilterElement suppressElement = (SuppressFilterElement) fc.getFilters()
                 .toArray()[0];
 
-        final String id = Whitebox.getInternalState(suppressElement, "moduleId");
+        final String id = TestUtil.getInternalState(suppressElement, "moduleId");
         assertEquals("someId", id, "Id has to be defined");
     }
 

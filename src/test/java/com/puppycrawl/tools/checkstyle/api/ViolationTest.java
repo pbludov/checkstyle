@@ -41,6 +41,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.puppycrawl.tools.checkstyle.internal.utils.TestUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junitpioneer.jupiter.DefaultLocale;
@@ -298,14 +299,14 @@ public class ViolationTest {
 
     @DefaultLocale("fr")
     @Test
-    public void testCleatBundleCache() {
+    public void testCleatBundleCache() throws Exception {
         Violation.setLocale(Locale.ROOT);
         final Violation violation = createSampleViolation();
 
         assertEquals("Empty statement.", violation.getViolation(), "Invalid violation");
 
         final Map<String, ResourceBundle> bundleCache =
-                Whitebox.getInternalState(Violation.class, "BUNDLE_CACHE");
+                TestUtil.getInternalState(Violation.class, "BUNDLE_CACHE");
 
         assertEquals(1, bundleCache.size(), "Invalid bundle cache size");
 

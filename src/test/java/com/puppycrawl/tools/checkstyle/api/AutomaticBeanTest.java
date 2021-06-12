@@ -31,6 +31,7 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
+import com.puppycrawl.tools.checkstyle.internal.utils.TestUtil;
 import org.apache.commons.beanutils.ConversionException;
 import org.apache.commons.beanutils.ConvertUtilsBean;
 import org.apache.commons.beanutils.Converter;
@@ -167,7 +168,7 @@ public class AutomaticBeanTest {
     @Test
     public void testRegisterIntegralTypes() throws Exception {
         final ConvertUtilsBeanStub convertUtilsBean = new ConvertUtilsBeanStub();
-        Whitebox.invokeMethod(AutomaticBean.class, "registerIntegralTypes", convertUtilsBean);
+        TestUtil.invokeMethod(AutomaticBean.class, "registerIntegralTypes", convertUtilsBean);
         assertEquals(81, convertUtilsBean.getRegisterCount(),
                 "Number of converters registered differs from expected");
     }

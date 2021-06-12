@@ -22,6 +22,7 @@ package com.puppycrawl.tools.checkstyle.internal.utils;
 import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
@@ -37,6 +38,8 @@ import com.puppycrawl.tools.checkstyle.api.AbstractCheck;
 import com.puppycrawl.tools.checkstyle.api.AutomaticBean;
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import com.puppycrawl.tools.checkstyle.api.DetailAST;
+import org.junit.platform.commons.support.ReflectionSupport;
+import org.powermock.reflect.internal.WhiteboxImpl;
 
 public final class TestUtil {
 
@@ -84,11 +87,11 @@ public final class TestUtil {
         final Field resultField;
         if (classField.isPresent()) {
             resultField = classField.get();
+            resultField.setAccessible(true);
         }
         else {
-            resultField = clss.getSuperclass().getDeclaredField(fieldName);
+            resultField = getClassDeclaredField(clss.getSuperclass(), fieldName);
         }
-        resultField.setAccessible(true);
         return resultField;
     }
 
@@ -102,8 +105,22 @@ public final class TestUtil {
      */
     public static Method getClassDeclaredMethod(Class<?> clss, String methodName)
             throws NoSuchMethodException {
+        return getClassDeclaredMethod(clss, methodName, -1);
+    }
+    /**
+     * Retrieves the specified method by it's name in the class or it's direct super.
+     *
+     * @param clss The class to retrieve the field for.
+     * @param methodName The name of the method to retrieve.
+     * @return The class' field.
+     * @throws NoSuchMethodException if the requested method cannot be found in the class.
+     */
+    public static Method getClassDeclaredMethod(Class<?> clss, String methodName, int numParameters)
+            throws NoSuchMethodException {
         final Optional<Method> classMethod = Arrays.stream(clss.getDeclaredMethods())
-                .filter(method -> methodName.equals(method.getName())).findFirst();
+                .filter(method -> methodName.equals(method.getName())
+                    && (numParameters == -1 || numParameters == method.getParameterCount()))
+                .findFirst();
         final Method resultMethod;
         if (classMethod.isPresent()) {
             resultMethod = classMethod.get();
@@ -235,6 +252,86 @@ public final class TestUtil {
             ++result;
         }
         return result;
+    }
+
+    /**
+     * Get the value of a field using reflection.
+     *
+     * @param instance the instance to read
+     * @param fieldName the name of the field
+     */
+    public static <T> T getInternalState(Object instance, String fieldName)
+            throws ReflectiveOperationException {
+        Field field = getClassDeclaredField(instance.getClass(), fieldName);
+        field.setAccessible(true);
+        return (T) field.get(instance);
+    }
+
+    /**
+     * Get the value of a static field using reflection.
+     *
+     * @param clazz the class of the field
+     * @param fieldName the name of the field
+     */
+    public static <T> T getInternalState(Class<?> clazz, String fieldName)
+            throws ReflectiveOperationException {
+        Field field = getClassDeclaredField(clazz, fieldName);
+        field.setAccessible(true);
+        return (T) field.get(null);
+    }
+
+    /**
+     * Set the value of a field using reflection. This method will traverse the
+     * super class hierarchy until a field with name <tt>fieldName</tt> is
+     * found.
+     *
+     * @param instance
+     *            the instance whose field to modify
+     * @param fieldName
+     *            the name of the field
+     * @param value
+     *            the new value of the field
+     */
+    public static void setInternalState(Object instance,
+            String fieldName, Object value) throws ReflectiveOperationException {
+        Field field = getClassDeclaredField(instance.getClass(), fieldName);
+        field.setAccessible(true);
+        field.set(instance, value);
+    }
+
+    /**
+     * Invoke a private method for instance.
+     *
+     * @param instance
+     * @param methodToExecute
+     * @param arguments
+     * @param <T>
+     * @return
+     * @throws Exception
+     */
+    public static synchronized <T> T invokeMethod(Object instance, String methodToExecute, Object... arguments)
+            throws Exception {
+        Method method = getClassDeclaredMethod(instance.getClass(), methodToExecute, arguments.length);
+        try {
+            return (T) method.invoke(instance, arguments);
+        }
+        catch (InvocationTargetException ex) {
+            throw (Exception) ex.getCause();
+        }
+    }
+
+    /**
+     * Invoke a static private method.
+     */
+    public static synchronized <T> T invokeMethod(Class<?> clazz,
+            String methodToExecute, Object... arguments) throws Exception {
+        Method method = getClassDeclaredMethod(clazz, methodToExecute, arguments.length);
+        try {
+            return (T) method.invoke(null, arguments);
+        }
+        catch (InvocationTargetException ex) {
+            throw (Exception) ex.getCause();
+        }
     }
 
 }

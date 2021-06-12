@@ -41,6 +41,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import com.puppycrawl.tools.checkstyle.internal.utils.TestUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.powermock.reflect.Whitebox;
@@ -228,7 +229,7 @@ public class TranslationCheckTest extends AbstractXmlTestSupport {
         check.configure(checkConfig);
         check.setMessageDispatcher(dispatcher);
 
-        final Set<String> keys = Whitebox.invokeMethod(check, "getTranslationKeys",
+        final Set<String> keys = TestUtil.invokeMethod(check, "getTranslationKeys",
                 new File(".no.such.file"));
         assertTrue(keys.isEmpty(), "Translation keys should be empty when File is not found");
 
@@ -252,7 +253,7 @@ public class TranslationCheckTest extends AbstractXmlTestSupport {
         check.setMessageDispatcher(dispatcher);
 
         final Exception exception = new IOException("test exception");
-        Whitebox.invokeMethod(check, "logException", exception, new File(""));
+        TestUtil.invokeMethod(check, "logException", exception, new File(""));
 
         assertEquals(1, dispatcher.savedErrors.size(), "expected number of errors to fire");
         final Violation violation = new Violation(1,

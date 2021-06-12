@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import com.puppycrawl.tools.checkstyle.internal.utils.TestUtil;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -73,7 +74,7 @@ public class TreeWalkerPowerTest extends AbstractModuleTestSupport {
         lines.add("class Test {}");
         final FileText fileText = new FileText(file, lines);
         treeWalkerSpy.setFileContents(new FileContents(fileText));
-        Whitebox.invokeMethod(treeWalkerSpy, "processFiltered", file, fileText);
+        TestUtil.invokeMethod(treeWalkerSpy, "processFiltered", file, fileText);
         verifyPrivate(treeWalkerSpy, times(1)).invoke("walk",
                 any(DetailAST.class), any(FileContents.class), any(classAstState));
         verifyPrivate(treeWalkerSpy, times(0)).invoke("getFilteredViolations",
@@ -95,7 +96,7 @@ public class TreeWalkerPowerTest extends AbstractModuleTestSupport {
         lines.add("class Test {}");
         final FileText fileText = new FileText(file, lines);
         treeWalkerSpy.setFileContents(new FileContents(fileText));
-        Whitebox.invokeMethod(treeWalkerSpy, "processFiltered", file, fileText);
+        TestUtil.invokeMethod(treeWalkerSpy, "processFiltered", file, fileText);
         verifyPrivate(treeWalkerSpy, times(1)).invoke("walk",
                 any(DetailAST.class), any(FileContents.class), any(classAstState));
         verifyPrivate(treeWalkerSpy, times(0)).invoke("getFilteredViolations",

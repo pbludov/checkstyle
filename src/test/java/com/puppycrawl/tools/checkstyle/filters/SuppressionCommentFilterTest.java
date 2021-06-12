@@ -33,6 +33,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.puppycrawl.tools.checkstyle.internal.utils.TestUtil;
 import org.junit.jupiter.api.Test;
 import org.powermock.reflect.Whitebox;
 
@@ -322,7 +323,7 @@ public class SuppressionCommentFilterTest
     }
 
     @Test
-    public void testToStringOfTagClassWithMessage() {
+    public void testToStringOfTagClassWithMessage() throws Exception {
         final SuppressionCommentFilter filter = new SuppressionCommentFilter();
         filter.setMessageFormat(".*");
         final Object tag =
@@ -623,7 +624,7 @@ public class SuppressionCommentFilterTest
     }
 
     @Test
-    public void testTagsAreClearedEachRun() {
+    public void testTagsAreClearedEachRun() throws Exception {
         final SuppressionCommentFilter suppressionCommentFilter = new SuppressionCommentFilter();
         final List<?> tags1 = getTagsAfterExecution(suppressionCommentFilter,
                 "filename1", "//CHECKSTYLE:OFF", "line2");
@@ -659,7 +660,12 @@ public class SuppressionCommentFilterTest
         final TreeWalkerAuditEvent dummyEvent = new TreeWalkerAuditEvent(contents, filename,
                 new Violation(1, null, null, null, null, Object.class, ""), null);
         filter.accept(dummyEvent);
-        return Whitebox.getInternalState(filter, "tags");
+        try {
+            return TestUtil.getInternalState(filter, "tags");
+        }
+        catch (ReflectiveOperationException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
 }

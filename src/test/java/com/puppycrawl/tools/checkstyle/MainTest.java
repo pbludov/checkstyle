@@ -36,6 +36,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
@@ -61,6 +62,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
+import org.mockito.Mockito;
 import org.powermock.reflect.Whitebox;
 
 import com.puppycrawl.tools.checkstyle.api.AuditListener;
@@ -403,15 +405,14 @@ public class MainTest {
      */
     @Test
     public void testNonClosedSystemStreams() throws Exception {
+        // TODO: err
+        PrintStream savedOut = System.out;
+        PrintStream outProxy = Mockito.spy(System.out);
+        System.setOut(outProxy);
         Main.main("-c", getPath("InputMainConfig-classname.xml"), "-f", "xml",
                 getPath("InputMain.java"));
-
-        final Boolean closedOut = (Boolean) TestUtil
-                .getClassDeclaredField(System.out.getClass(), "closing").get(System.out);
-        assertThat("System.out stream should not be closed", closedOut, is(false));
-        final Boolean closedErr = (Boolean) TestUtil
-                .getClassDeclaredField(System.err.getClass(), "closing").get(System.err);
-        assertThat("System.err stream should not be closed", closedErr, is(false));
+        Mockito.verify(outProxy, Mockito.never()).close();
+        System.setOut(savedOut);
     }
 
     /**
@@ -794,7 +795,7 @@ public class MainTest {
             }
         };
 
-        final List<File> result = Whitebox.invokeMethod(Main.class, "listFiles",
+        final List<File> result = TestUtil.invokeMethod(Main.class, "listFiles",
                 fileMock, new ArrayList<Pattern>());
         assertEquals(0, result.size(), "Invalid result size");
     }
@@ -826,7 +827,7 @@ public class MainTest {
             }
         };
 
-        final List<File> result = Whitebox.invokeMethod(Main.class, "listFiles",
+        final List<File> result = TestUtil.invokeMethod(Main.class, "listFiles",
                 fileMock, new ArrayList<Pattern>());
         assertEquals(0, result.size(), "Invalid result size");
     }

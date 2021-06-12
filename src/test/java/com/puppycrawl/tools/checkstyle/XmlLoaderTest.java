@@ -30,6 +30,7 @@ import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import com.puppycrawl.tools.checkstyle.internal.utils.TestUtil;
 import org.junit.jupiter.api.Test;
 import org.powermock.reflect.Whitebox;
 import org.xml.sax.SAXException;
@@ -40,7 +41,7 @@ public class XmlLoaderTest {
     @Test
     public void testParserConfiguredSuccessfully() throws Exception {
         final DummyLoader dummyLoader = new DummyLoader(new HashMap<>(1));
-        final XMLReader parser = Whitebox.getInternalState(dummyLoader, "parser");
+        final XMLReader parser = TestUtil.getInternalState(dummyLoader, "parser");
         assertEquals(dummyLoader, parser.getEntityResolver(), "Invalid entity resolver");
     }
 

@@ -34,6 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.puppycrawl.tools.checkstyle.internal.utils.TestUtil;
 import org.junit.jupiter.api.Test;
 import org.powermock.reflect.Whitebox;
 
@@ -226,7 +227,7 @@ public class NewlineAtEndOfFileCheckTest
     public void testWrongSeparatorLength() throws Exception {
         try (RandomAccessFile file =
                      new ReadZeroRandomAccessFile(getPath("InputNewlineAtEndOfFileLf.java"), "r")) {
-            Whitebox.invokeMethod(new NewlineAtEndOfFileCheck(), "endsWithNewline", file,
+            TestUtil.invokeMethod(new NewlineAtEndOfFileCheck(), "endsWithNewline", file,
                 LineSeparatorOption.LF);
             fail("Exception is expected");
         }
