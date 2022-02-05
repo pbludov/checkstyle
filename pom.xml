@@ -12,7 +12,7 @@
 
   <groupId>com.puppycrawl.tools</groupId>
   <artifactId>checkstyle</artifactId>
-  <version>9.4-SNAPSHOT</version>
+  <version>10.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>checkstyle</name>
@@ -213,7 +213,7 @@
       9.1
     </maven.sevntu-checkstyle-check.checkstyle.version>
     <maven.versions.plugin.version>2.9.0</maven.versions.plugin.version>
-    <java.version>1.8</java.version>
+    <java.version>11</java.version>
     <pitest.plugin.version>1.7.3</pitest.plugin.version>
     <pitest.plugin.timeout.factor>10</pitest.plugin.timeout.factor>
     <pitest.plugin.timeout.constant>50000</pitest.plugin.timeout.constant>
@@ -280,7 +280,7 @@
     <dependency>
       <groupId>org.itsallcode</groupId>
       <artifactId>junit5-system-extensions</artifactId>
-      <version>1.1.0</version>
+      <version>1.2.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -1629,7 +1629,7 @@
     <plugins>
       <plugin>
         <artifactId>maven-project-info-reports-plugin</artifactId>
-        <version>3.1.2</version>
+        <version>3.2.1</version>
       </plugin>
 
       <plugin>
