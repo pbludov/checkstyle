@@ -35,6 +35,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junitpioneer.jupiter.DefaultLocale;
 
 import com.puppycrawl.tools.checkstyle.internal.utils.TestUtil;
@@ -79,16 +80,19 @@ public class ViolationTest {
     }
 
     /**
-     * Verifies that if the language is specified explicitly (and it is not English),
-     * the violation does not use the default value.
+     * Checks that Checkstyle supports the specified language.
      */
+    @EnabledIfEnvironmentVariable(
+        named = "LANG",
+        matches = ".*",
+        disabledReason = "The environment variable 'LANG' is missing")
     @Test
     public void testLocaleIsSupported() {
         final String language = DEFAULT_LOCALE.getLanguage();
-        assumeFalse(language.isEmpty() || Locale.ENGLISH.getLanguage().equals(language),
-                "Custom locale not set");
+        assumeFalse(System.getenv("LANG").startsWith(language),
+                "System locale '" + language + "' is not overridden");
         final Violation violation = createSampleViolation();
-        assertWithMessage("Unsupported language: %s", DEFAULT_LOCALE)
+        assertWithMessage("Unsupported language: %s", language)
                 .that(violation.getViolation())
                 .isNotEqualTo("Empty statement.");
     }

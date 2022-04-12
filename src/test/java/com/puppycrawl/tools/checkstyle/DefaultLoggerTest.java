@@ -37,6 +37,7 @@ import java.util.ResourceBundle;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junitpioneer.jupiter.DefaultLocale;
 
 import com.puppycrawl.tools.checkstyle.api.AuditEvent;
@@ -242,23 +243,24 @@ public class DefaultLoggerTest {
     }
 
     /**
-     * Verifies that if the language is specified explicitly (and it is not English),
-     * the message does not use the default value.
+     * Checks that the message does not use the default (English) value
+     * if a language is specified explicitly.
      */
+    @EnabledIfEnvironmentVariable(
+        named = "LANG",
+        matches = ".*",
+        disabledReason = "The environment variable 'LANG' is missing")
     @Test
     public void testLocaleIsSupported() throws Exception {
         final String language = DEFAULT_LOCALE.getLanguage();
-        assumeFalse(language.isEmpty() || Locale.ENGLISH.getLanguage().equals(language),
-                "Custom locale not set");
+        assumeFalse(System.getenv("LANG").startsWith(language),
+                "System locale '" + language + "' is not overridden");
         final Class<?> localizedMessage = getDefaultLoggerClass().getDeclaredClasses()[0];
-        final Object messageCon = localizedMessage.getConstructor(String.class, String[].class)
-                .newInstance(DefaultLogger.ADD_EXCEPTION_MESSAGE, null);
-        final Method message = messageCon.getClass().getDeclaredMethod("getMessage");
-        final Object constructor = localizedMessage.getConstructor(String.class)
+        final Object constructor = localizedMessage.getDeclaredConstructor(String.class)
                 .newInstance(DefaultLogger.ADD_EXCEPTION_MESSAGE);
         assertWithMessage("Unsupported language: " + DEFAULT_LOCALE)
-                .that(message.invoke(constructor))
-                .isEqualTo("Error auditing {0}");
+                .that(TestUtil.<String>invokeMethod(constructor, "getMessage"))
+                .isNotEqualTo("Error auditing {0}");
     }
 
     @DefaultLocale("fr")
