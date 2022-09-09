@@ -12,7 +12,7 @@
 
   <groupId>com.puppycrawl.tools</groupId>
   <artifactId>checkstyle</artifactId>
-  <version>10.4-SNAPSHOT</version>
+  <version>10.3.4-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>checkstyle</name>
@@ -206,32 +206,33 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <surefire.options />
     <projectVersion>${project.version}</projectVersion>
-    <antlr4.version>4.10.1</antlr4.version>
+    <antlr4.version>4.11.1</antlr4.version>
     <maven.site.plugin.version>3.12.1</maven.site.plugin.version>
-    <maven.spotbugs.plugin.version>4.7.1.1</maven.spotbugs.plugin.version>
-    <maven.pmd.plugin.version>3.17.0</maven.pmd.plugin.version>
-    <pmd.version>6.47.0</pmd.version>
+    <maven.spotbugs.plugin.version>4.7.2.0</maven.spotbugs.plugin.version>
+    <maven.pmd.plugin.version>3.19.0</maven.pmd.plugin.version>
+    <pmd.version>6.49.0</pmd.version>
     <maven.jacoco.plugin.version>0.8.8</maven.jacoco.plugin.version>
-    <mockito.version>4.7.0</mockito.version>
+    <mockito.version>4.8.0</mockito.version>
     <saxon.version>11.4</saxon.version>
-    <maven.checkstyle.plugin.version>3.1.2</maven.checkstyle.plugin.version>
+    <maven.checkstyle.plugin.version>3.2.0</maven.checkstyle.plugin.version>
     <maven.sevntu.checkstyle.plugin.version>1.42.0</maven.sevntu.checkstyle.plugin.version>
     <maven.sevntu-checkstyle-check.checkstyle.version>
       10.0
     </maven.sevntu-checkstyle-check.checkstyle.version>
-    <maven.versions.plugin.version>2.11.0</maven.versions.plugin.version>
+    <maven.versions.plugin.version>2.12.0</maven.versions.plugin.version>
     <java.version>11</java.version>
-    <pitest.plugin.version>1.9.4</pitest.plugin.version>
+    <pitest.plugin.version>1.9.5</pitest.plugin.version>
     <pitest.plugin.timeout.factor>10</pitest.plugin.timeout.factor>
     <pitest.plugin.output.formats>HTML,XML</pitest.plugin.output.formats>
     <pitest.plugin.timeout.constant>50000</pitest.plugin.timeout.constant>
     <pitest.plugin.threads>4</pitest.plugin.threads>
     <pitest.junit5.plugin.version>1.0.0</pitest.junit5.plugin.version>
-    <pitest.accelerator.junit5.plugin.version>1.0.0</pitest.accelerator.junit5.plugin.version>
+    <pitest.accelerator.junit5.plugin.version>1.0.1</pitest.accelerator.junit5.plugin.version>
     <sonar.test.exclusions>**/test/resources/**/*,**/it/resources/**/*</sonar.test.exclusions>
     <junit.version>5.9.0</junit.version>
     <forbiddenapis.version>3.3</forbiddenapis.version>
     <json-schema-validator.version>1.2.0</json-schema-validator.version>
+    <error-prone.version>2.15.0</error-prone.version>
   </properties>
 
   <dependencies>
@@ -345,13 +346,13 @@
     <dependency>
       <groupId>org.eclipse.jgit</groupId>
       <artifactId>org.eclipse.jgit</artifactId>
-      <version>6.2.0.202206071550-r</version>
+      <version>6.3.0.202209071007-r</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>
-      <version>1.7.36</version>
+      <version>2.0.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -751,46 +752,6 @@
             <arg>-Xpkginfo:always</arg>
           </compilerArgs>
         </configuration>
-        <!-- till https://github.com/checkstyle/checkstyle/issues/2160
-        <executions>
-          <execution>
-            <id>compile-without-error-prone</id>
-            <goals>
-              <goal>testCompile</goal>
-            </goals>
-            <configuration>
-              <testIncludes>
-                <testInclude>**/Input*.java</testInclude>
-              </testIncludes>
-            </configuration>
-          </execution>
-          <execution>
-            <id>compile-with-error-prone</id>
-            <goals>
-              <goal>testCompile</goal>
-            </goals>
-            <configuration>
-              <compilerId>javac-with-errorprone</compilerId>
-              <forceJavacCompilerUse>true</forceJavacCompilerUse>
-              <testExcludes>
-                <testExclude>**/*Input*.java</testExclude>
-              </testExcludes>
-            </configuration>
-          </execution>
-        </executions>
-        <dependencies>
-          <dependency>
-            <groupId>org.codehaus.plexus</groupId>
-            <artifactId>plexus-compiler-javac-errorprone</artifactId>
-            <version>2.6</version>
-          </dependency>
-          <dependency>
-            <groupId>com.google.errorprone</groupId>
-            <artifactId>error_prone_core</artifactId>
-            <version>2.0.5</version>
-          </dependency>
-        </dependencies>
-        -->
       </plugin>
 
       <plugin>
@@ -1346,7 +1307,7 @@
                   <version>${java.version}</version>
                 </requireJavaVersion>
                 <requireMavenVersion>
-                  <version>3.0.1</version>
+                  <version>3.3.9</version>
                 </requireMavenVersion>
                 <!-- we can not use this as it require same version for all dependencies -->
                 <!--
@@ -1930,7 +1891,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jxr-plugin</artifactId>
-        <version>3.2.0</version>
+        <version>3.3.0</version>
       </plugin>
 
       <plugin>
@@ -2146,6 +2107,7 @@
             <excludedLink>https://travis-ci.com/</excludedLink>
             <!-- permanent 403 -->
             <excludedLink>https://docs.github.com/en/rest/checks</excludedLink>
+            <excludedLink>https://www.ietf.org/rfc/rfc4627.txt</excludedLink>
             <!-- until https://github.com/checkstyle/checkstyle/issues/11754 -->
             <excludedLink>https://checkstyle.sourceforge.io/version/6.18</excludedLink>
           </excludedLinks>
@@ -2310,6 +2272,111 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>sonar-maven-plugin</artifactId>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>error-prone-compile</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.10.1</version>
+            <executions>
+              <!-- Skip the default-compile execution as we don't want to execute the compile goal twice -->
+              <execution>
+                <id>default-compile</id>
+                <phase>compile</phase>
+                <goals>
+                  <goal>compile</goal>
+                </goals>
+                <configuration>
+                  <skipMain>true</skipMain>
+                </configuration>
+              </execution>
+              <execution>
+                <id>error-prone-compile</id>
+                <phase>compile</phase>
+                <goals>
+                  <goal>compile</goal>
+                </goals>
+                <configuration>
+                  <failOnError>false</failOnError>
+                  <source>${java.version}</source>
+                  <target>${java.version}</target>
+                  <compilerArgs>
+                    <arg>-Xpkginfo:always</arg>
+                    <arg>-XDcompilePolicy=simple</arg>
+                    <arg>
+                      -Xplugin:ErrorProne
+                    </arg>
+                  </compilerArgs>
+                  <annotationProcessorPaths>
+                    <path>
+                      <groupId>com.google.errorprone</groupId>
+                      <artifactId>error_prone_core</artifactId>
+                      <version>${error-prone.version}</version>
+                    </path>
+                  </annotationProcessorPaths>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>error-prone-test-compile</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.10.1</version>
+            <executions>
+              <!-- Skip the default-testCompile execution as we don't want to execute the testCompile goal twice -->
+              <execution>
+                <id>default-testCompile</id>
+                <phase>test-compile</phase>
+                <goals>
+                  <goal>testCompile</goal>
+                </goals>
+                <configuration>
+                  <skip>true</skip>
+                </configuration>
+              </execution>
+              <execution>
+                <id>error-prone-test-compile</id>
+                <phase>test-compile</phase>
+                <goals>
+                  <goal>testCompile</goal>
+                </goals>
+                <configuration>
+                  <failOnError>false</failOnError>
+                  <source>${java.version}</source>
+                  <target>${java.version}</target>
+                  <compilerArgs>
+                    <arg>-Xpkginfo:always</arg>
+                    <arg>-XDcompilePolicy=simple</arg>
+                    <arg>
+                      -Xplugin:ErrorProne \
+                      -XepExcludedPaths:.*[\\/]resources[\\/].*
+                    </arg>
+                  </compilerArgs>
+                  <annotationProcessorPaths>
+                    <path>
+                      <groupId>com.google.errorprone</groupId>
+                      <artifactId>error_prone_core</artifactId>
+                      <version>${error-prone.version}</version>
+                    </path>
+                  </annotationProcessorPaths>
+                </configuration>
+              </execution>
+            </executions>
           </plugin>
         </plugins>
       </build>
